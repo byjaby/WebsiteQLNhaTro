@@ -1,0 +1,79 @@
+// routes/phong.js
+const express = require("express");
+const router = express.Router();
+const Phong = require("../models/Phong");
+
+router.post("/", async (req, res) => {
+  try {
+    console.log("📥 Nhận dữ liệu từ client:", req.body);
+
+    if (!req.body.chuTroId) {
+      return res.status(400).json({ error: "Thiếu chuTroId" });
+    }
+    const newPhong = new Phong(req.body);
+    await newPhong.save();
+    res.status(201).json(newPhong);
+  } catch (err) {
+    console.error("❌ Lỗi khi lưu phòng:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// GET /api/phong/chu-tro/:chuTroId
+router.get("/chu-tro/:chuTroId", async (req, res) => {
+  try {
+    const rooms = await Phong.find({ chuTroId: req.params.chuTroId });
+    res.json(rooms);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 📌 Lấy chi tiết 1 phòng theo id
+router.get("/:id", async (req, res) => {
+  try {
+    const phong = await Phong.findById(req.params.id).select("-chuTroId -__v");
+    if (!phong)
+      return res.status(404).json({ message: "Không tìm thấy phòng" });
+    res.json(phong);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// 📌 Cập nhật thông tin phòng
+router.put("/:id", async (req, res) => {
+  try {
+    const updatedPhong = await Phong.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    ).select("-chuTroId -__v");
+
+    if (!updatedPhong)
+      return res
+        .status(404)
+        .json({ message: "Không tìm thấy phòng để cập nhật" });
+
+    res.json({ message: "Cập nhật thành công", phong: updatedPhong });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+// 🗑️ Xóa phòng theo id
+router.delete("/:id", async (req, res) => {
+  try {
+    const deleted = await Phong.findByIdAndDelete(req.params.id);
+    if (!deleted) {
+      return res.status(404).json({ message: "Không tìm thấy phòng để xóa" });
+    }
+    return res
+      .status(200)
+      .json({ message: "Xóa phòng thành công", id: req.params.id });
+  } catch (err) {
+    console.error("❌ Lỗi khi xóa phòng:", err);
+    return res.status(500).json({ message: err.message });
+  }
+});
+module.exports = router;

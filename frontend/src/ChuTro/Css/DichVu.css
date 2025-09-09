@@ -1,0 +1,72 @@
+.dichvu-container {
+  padding: 20px;
+}
+
+.dichvu-container h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #222;
+}
+
+.add-service-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.add-service-form input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.add-service-form button {
+  background: #28a745;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.dichvu-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.dichvu-table th,
+.dichvu-table td {
+  border: 1px solid #ddd;
+  padding: 10px 14px;
+  text-align: left;
+}
+
+.dichvu-table th {
+  background: #f4f4f4;
+  font-weight: bold;
+}
+
+.dichvu-table tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.dichvu-table tr:hover {
+  background: #f1f1f1;
+}
+
+.edit-btn, .delete-btn, .save-btn, .cancel-btn {
+  border: none;
+  padding: 6px 10px;
+  margin: 0 2px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.edit-btn { background: #ffc107; color: #000; }
+.delete-btn { background: #dc3545; color: #fff; }
+.save-btn { background: #28a745; color: #fff; }
+.cancel-btn { background: #6c757d; color: #fff; }
