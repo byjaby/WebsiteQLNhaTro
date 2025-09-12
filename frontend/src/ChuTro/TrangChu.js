@@ -103,7 +103,9 @@ function TrangChu() {
               {user ? (
                 // ✅ Nếu đã đăng nhập
                 <div className="user-info">
-                  <span className="user-name">👤 {user.name}</span>
+                  <Link to="/ttcn">
+                    <button className="user-name">👤 {user.name}</button>
+                  </Link>
                   <button className="logout-btn" onClick={handleLogout}>
                     🚪 Đăng xuất
                   </button>

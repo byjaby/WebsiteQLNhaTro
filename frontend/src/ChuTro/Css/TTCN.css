@@ -1,0 +1,49 @@
+.ttcn-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ttcn-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.ttcn-card p {
+  font-size: 16px;
+  margin: 10px 0;
+}
+
+.ttcn-card strong {
+  color: #555;
+}
+
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  margin-top: 15px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background: #007bff;
+  color: #fff;
+}
+
+.save-btn {
+  background: #28a745;
+  color: #fff;
+  margin-right: 10px;
+}
+
+.cancel-btn {
+  background: #dc3545;
+  color: #fff;
+}

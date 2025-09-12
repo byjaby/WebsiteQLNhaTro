@@ -18,9 +18,18 @@ const userSchema = new mongoose.Schema(
 
     password: {
       type: String,
-      required: [true, "Vui lòng nhập mật khẩu"],
+      required: function () {
+        return !this.googleId; // Nếu không có googleId thì bắt buộc password
+      },
       minlength: [6, "Mật khẩu phải có ít nhất 6 ký tự"],
     },
+
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true, // cho phép nhiều user thường có googleId = null
+    },
+
     role: {
       type: String,
       enum: ["nguoi_thue", "chu_tro"],
@@ -29,16 +38,19 @@ const userSchema = new mongoose.Schema(
 
     soDienThoai: {
       type: String,
-      required: [true, "Số điện thoại không được để trống"],
-      unique: true, // unique toàn hệ thống
-      match: [/^0[0-9]{8,10}$/, "Số điện thoại không hợp lệ"], // 9-11 số, bắt đầu bằng 0
+      required: function () {
+        return !this.googleId; // nếu login Google thì không bắt buộc
+      },
+      unique: true,
+      sparse: true, // tránh lỗi unique khi để trống
+      match: [/^0[0-9]{8,10}$/, "Số điện thoại không hợp lệ"],
     },
 
     // Thông tin dành cho NGƯỜI THUÊ
     diaChiNguoiThue: {
       type: String,
       required: function () {
-        return this.role === "nguoi_thue";
+        return this.role === "nguoi_thue" && !this.googleId;
       },
     },
 
@@ -55,6 +67,10 @@ const userSchema = new mongoose.Schema(
         return this.role === "chu_tro";
       },
       unique: true, // mỗi địa chỉ trọ là duy nhất (nhưng chỉ check ở chủ trọ)
+    },
+    soPhong: {
+      type: Number,
+      default: 0, // ban đầu chủ trọ chưa có phòng nào
     },
   },
   { timestamps: true }

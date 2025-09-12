@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import "../KhachThue/Css/DangNhap.css";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const DangNhap = () => {
   const location = useLocation();
@@ -29,14 +30,40 @@ const DangNhap = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const [role, setRole] = useState("nguoi_thue"); // mặc định: người thuê trọ
 
-  // Nhận state từ router
+  // Nhận state từ router & xử lý token từ Google
   useEffect(() => {
+    // 1. Kiểm tra nếu có token từ Google OAuth callback
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (token) {
+      localStorage.setItem("token", token);
+
+      const decoded = jwtDecode(token); // ✅ sử dụng named import
+      const userId = decoded.id;
+
+      fetch(`http://localhost:5000/api/auth/user/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          localStorage.setItem("user", JSON.stringify(data.user));
+          navigate("/");
+        })
+        .catch((err) => console.error(err));
+
+      window.history.replaceState({}, document.title, "/");
+      return;
+    }
+
+    // 2. Nếu từ trang khác chuyển sang đăng ký
     if (location.state?.isLogin === false) {
       setIsLogin(false);
     } else {
       setIsLogin(true);
     }
 
+    // 3. Nếu có rememberMe thì điền sẵn email + password
     const savedLogin = localStorage.getItem("loginData");
     if (savedLogin) {
       const { email, password } = JSON.parse(savedLogin);
@@ -45,9 +72,9 @@ const DangNhap = () => {
         email,
         password,
       }));
-      setRememberMe(true); // tick lại checkbox luôn
+      setRememberMe(true);
     }
-  }, [location]);
+  }, [location, navigate]);
 
   const handleInputChange = (e) => {
     setFormData({
@@ -408,10 +435,16 @@ const DangNhap = () => {
 
           {/* Social login */}
           <div className="social-login">
-            <button className="social-button">
+            <button
+              className="social-button"
+              onClick={() =>
+                (window.location.href = "http://localhost:5000/api/auth/google")
+              }
+            >
               <Chrome size={20} />
               <span>Google</span>
             </button>
+
             <button className="social-button">
               <Github size={20} />
               <span>GitHub</span>

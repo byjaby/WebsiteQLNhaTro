@@ -9,17 +9,9 @@ function ChuTro() {
   useEffect(() => {
     const savedUser =
       localStorage.getItem("user") || sessionStorage.getItem("user");
-
-    if (savedUser) {
-      const parsedUser = JSON.parse(savedUser);
-      if (parsedUser.role === "khach_thue") {
-        setUser(parsedUser); // cho phép khách thuê
-      } else {
-        navigate("/chu-tro"); // chủ trọ thì chuyển hướng
-      }
-    } else {
-      // chưa đăng nhập vẫn cho vào, có thể set user = null
-      setUser(null);
+    const parsedUser = JSON.parse(savedUser);
+    if (parsedUser.role === "khach_thue") {
+      setUser(parsedUser);
     }
   }, [navigate]);
 

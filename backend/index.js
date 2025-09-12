@@ -1,12 +1,25 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const session = require("express-session");
+const passport = require("passport");
 require("dotenv").config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+// Middleware session
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "keyboard cat", // bạn nên để trong .env
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
+// Khởi tạo passport
+app.use(passport.initialize());
+app.use(passport.session());
 // Import routes
 const itemRoutes = require("./routes/itemRoutes");
 const authRoutes = require("./routes/authRoutes");
