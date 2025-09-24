@@ -1,0 +1,24 @@
+/* Toggle mode */
+.auth-toggle {
+  text-align: center;
+  margin-top: 32px;
+}
+
+.auth-toggle p {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  color: #ff0000;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: color 0.3s ease;
+}
+
+.toggle-button:hover {
+  color: #00c3ff;
+}

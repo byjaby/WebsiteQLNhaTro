@@ -86,7 +86,7 @@
 
 /* Thao tác cá nhân */
 .profile-actions {
-  margin-top: 1rem;
+
   display: flex;
   gap: 1rem;
 }
@@ -106,10 +106,16 @@
 }
 
 /* Avatar */
+.avatar-wrapper {
+  text-align: center; /* căn giữa avatar + label */
+
+}
+
 .avatar-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: relative;
+  display: inline-block; /* giữ nguyên kích thước theo ảnh */
+  width: 150px;
+  height: 150px;
 }
 
 .avatar-image {
@@ -118,7 +124,39 @@
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid #3b82f6;
-  margin-bottom: 0.5rem;
+  display: block; /* tránh khoảng trống dưới ảnh */
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  cursor: pointer;
+}
+
+.avatar-section:hover .avatar-overlay {
+  opacity: 1;
+}
+
+.avatar-input {
+  display: none;
+}
+
+.avatar-label {
+  margin-top: 0.5rem;
+  font-weight: 500;
+  color: #555; /* chữ xám nhạt cho đẹp */
 }
 
 .avatar-upload {
@@ -204,3 +242,4 @@
   display: flex;
   gap: 10px;
 }
+

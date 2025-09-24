@@ -6,6 +6,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Filters from "../components/Filters";
 import NhaTroCard from "../components/NhaTroCard";
+import HeroSection from "../components/HeroSection";
 
 function TrangChu() {
   const [user, setUser] = useState(null);
@@ -24,12 +25,12 @@ function TrangChu() {
       const parsedUser = JSON.parse(savedUser);
       if (parsedUser.role === "nguoi_thue") setUser(parsedUser);
       else navigate("/chu-tro");
-    } else navigate("/chu-tro");
+    } else navigate("/");
     fetch("http://localhost:5000/api/nha-tro")
       .then((res) => res.json())
       .then((data) => setNhaTros(data))
       .catch((err) => console.error("Lỗi fetch:", err));
-  }, []);
+  }, [navigate]);
 
   // ✅ Logout
   const handleLogout = () => {
@@ -82,26 +83,7 @@ function TrangChu() {
       <Header user={user} onLogout={handleLogout} />
 
       {/* Hero Section */}
-      <section className="hero-section">
-        <div className="hero-content">
-          <h2 className="hero-title">Tìm nhà trọ lý tưởng của bạn</h2>
-          <p className="hero-subtitle">
-            Khám phá nhiều nhà trọ chất lượng, giá cả hợp lý và vị trí thuận
-            tiện
-          </p>
-
-          <div className="search-box">
-            <input
-              type="text"
-              placeholder="🔍 Tìm theo chủ trọ, tên trọ, địa chỉ..."
-              className="search-input"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button className="search-btn">Tìm kiếm</button>
-          </div>
-        </div>
-      </section>
+      <HeroSection searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
       {/* Bộ lọc */}
       <Filters

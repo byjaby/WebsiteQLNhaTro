@@ -464,16 +464,13 @@ router.post("/reset-password", async (req, res) => {
   }
 });
 
-// Cấu hình multer lưu ảnh vào thư mục uploads/
+// Cấu hình Multer để lưu file lên server
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadPath = path.join(__dirname, "../uploads/avatars");
-
-    // Nếu chưa có thư mục thì tạo
+    const uploadPath = path.join(process.cwd(), "uploads/avatars");
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
-
     cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
@@ -481,24 +478,117 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({ storage });
 
+// API upload avatar
 router.post("/:id/avatar", upload.single("avatar"), async (req, res) => {
   try {
     const userId = req.params.id;
 
-    // Lấy buffer từ file upload
-    const avatarBase64 = req.file.buffer.toString("base64");
+    // Tìm user hiện tại để biết avatar cũ
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Không tìm thấy user" });
+    }
 
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { avatar: avatarBase64 },
-      { new: true }
-    );
+    // Nếu user đã có avatar cũ thì xóa file trong uploads
+    if (user.avatar) {
+      const oldPath = path.join(process.cwd(), user.avatar);
+      fs.unlink(oldPath, (err) => {
+        if (err) {
+          console.warn("Không thể xoá avatar cũ:", err.message);
+        } else {
+          console.log("Đã xoá avatar cũ:", oldPath);
+        }
+      });
+    }
 
-    res.json({ message: "Upload thành công", avatar: user.avatar, user });
+    // Tạo đường dẫn public cho avatar mới
+    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+
+    // Cập nhật user với avatar mới
+    user.avatar = avatarUrl;
+    await user.save();
+
+    res.json({
+      message: "Upload thành công",
+      avatarUrl,
+      user,
+    });
   } catch (err) {
+    console.error("Lỗi upload avatar:", err);
     res.status(500).json({ message: "Lỗi server", error: err.message });
+  }
+});
+
+router.put("/nguoithue/:id", authMiddleware, async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // ✅ Chỉ cho phép update những field hợp lệ
+    const allowedFields = ["name", "ngaySinh", "soDienThoai", "diaChi"];
+    const updates = {};
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        updates[field] = req.body[field];
+      }
+    });
+
+    // ✅ Kiểm tra ngày sinh hợp lệ
+    if (updates.ngaySinh) {
+      const ngaySinh = new Date(updates.ngaySinh);
+      const today = new Date();
+
+      // Xóa giờ phút giây để so sánh chính xác ngày
+      ngaySinh.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+
+      if (ngaySinh >= today) {
+        return res
+          .status(400)
+          .json({ message: "Ngày sinh phải nhỏ hơn ngày hiện tại" });
+      }
+    }
+
+    // ✅ Nếu có số điện thoại thì kiểm tra trùng
+    if (updates.soDienThoai) {
+      const existingPhone = await User.findOne({
+        soDienThoai: updates.soDienThoai,
+        _id: { $ne: userId }, // tránh đụng chính mình
+      });
+
+      if (existingPhone) {
+        return res
+          .status(400)
+          .json({ message: "Số điện thoại đã được sử dụng" });
+      }
+    }
+
+    // ✅ Cập nhật user
+    const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+      new: true,
+      runValidators: true,
+    }).select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Không tìm thấy user" });
+    }
+
+    return res.status(200).json({
+      message: "Cập nhật thành công",
+      user: updatedUser,
+    });
+  } catch (err) {
+    // ✅ Bắt lỗi duplicate từ Mongo (E11000)
+    if (err.code === 11000) {
+      return res.status(400).json({
+        message: "Giá trị đã tồn tại",
+        field: Object.keys(err.keyValue)[0],
+      });
+    }
+
+    console.error("Lỗi cập nhật user:", err);
+    return res.status(500).json({ message: "Lỗi server" });
   }
 });
 

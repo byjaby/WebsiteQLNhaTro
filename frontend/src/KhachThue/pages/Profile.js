@@ -1,29 +1,43 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cropper from "react-easy-crop";
 import "../Css/Profile.css";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import defaultAvatar from "../images/default-avatar.png";
+import SuaThongTin from "../components/SuaThongTin";
+import DoiMatKhau from "../components/DoiMatKhau";
 
 function Profile() {
-  const location = useLocation();
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null); // file gốc
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null); // tọa độ crop
-  const [croppedImage, setCroppedImage] = useState(null); // ảnh sau khi crop
   const [showCropper, setShowCropper] = useState(false);
   const [user, setUser] = useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
 
-  // Lấy user từ Link state khi vào trang Profile
+  const [showEdit, setShowEdit] = useState(false);
+  const [showChange, setShowChange] = useState(false);
+
   useEffect(() => {
-    if (location.state?.user) {
-      setUser(location.state.user);
-    }
-  }, [location.state]);
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/auth/me", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // token lưu khi login
+          },
+        });
+        setUser(res.data);
+      } catch (err) {
+        console.error("Lỗi load user:", err);
+        navigate("/dang-nhap"); // token lỗi => đá về login
+      }
+    };
+
+    fetchUser();
+  }, [navigate]);
 
   const onCropComplete = useCallback((_, croppedPixels) => {
     setCroppedAreaPixels(croppedPixels);
@@ -40,14 +54,6 @@ function Profile() {
     navigate("/dang-nhap");
   };
 
-  const handleUpdateInfo = () => {
-    navigate("/cap-nhat-thong-tin", { state: { user } });
-  };
-
-  const handleChangePassword = () => {
-    navigate("/doi-mat-khau", { state: { userId: user._id } });
-  };
-
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -57,6 +63,12 @@ function Profile() {
       setShowCropper(true);
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleCancelCrop = () => {
+    setShowCropper(false);
+    setSelectedImage(null);
+    document.getElementById("avatarInput").value = ""; // reset input file
   };
 
   // Hàm tạo ảnh đã crop từ canvas
@@ -92,14 +104,8 @@ function Profile() {
   const handleSave = async () => {
     if (!selectedImage || !croppedAreaPixels) return;
 
-    // Lấy blob từ ảnh crop
     const croppedBlob = await getCroppedImg(selectedImage, croppedAreaPixels);
 
-    // Preview tạm
-    const previewUrl = URL.createObjectURL(croppedBlob);
-    setCroppedImage(previewUrl);
-
-    // Gửi lên server
     const formData = new FormData();
     formData.append("avatar", croppedBlob, "avatar.jpg");
 
@@ -110,10 +116,16 @@ function Profile() {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
 
-      setUser({ ...user, avatar: res.data.avatarUrl });
+      // cập nhật user luôn trong state
+      setUser(res.data.user);
+
       setShowCropper(false);
+      alert("Cập nhật avatar thành công!");
+
+      window.location.reload();
     } catch (err) {
       console.error("Upload thất bại:", err);
+      alert("Có lỗi xảy ra khi upload avatar!");
     }
   };
 
@@ -132,22 +144,42 @@ function Profile() {
                   <h2>Thông tin cá nhân</h2>
 
                   <div>
-                    <div className="avatar-section">
-                      <img
-                        src={
-                          user.avatar
-                            ? `data:image/jpeg;base64,${user.avatar}`
-                            : croppedImage || defaultAvatar
-                        }
-                        alt="Avatar"
-                        className="avatar-image"
-                      />
+                    <div className="avatar-wrapper">
+                      <div className="avatar-section">
+                        <img
+                          src={
+                            user?.avatar
+                              ? `http://localhost:5000${
+                                  user.avatar
+                                }?t=${Date.now()}`
+                              : defaultAvatar
+                          }
+                          alt="Avatar"
+                          className="avatar-image"
+                        />
 
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                      />
+                        {/* Overlay hiện khi hover */}
+                        <div
+                          className="avatar-overlay"
+                          onClick={() =>
+                            document.getElementById("avatarInput").click()
+                          }
+                        >
+                          📷
+                        </div>
+
+                        {/* Input file ẩn */}
+                        <input
+                          id="avatarInput"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                          className="avatar-input"
+                        />
+                      </div>
+
+                      {/* chữ nằm dưới avatar */}
+                      <p className="avatar-label">Hình đại diện</p>
                     </div>
 
                     {showCropper && (
@@ -166,9 +198,7 @@ function Profile() {
 
                         <div className="cropper-actions">
                           <button onClick={handleSave}>✅ Lưu ảnh</button>
-                          <button onClick={() => setShowCropper(false)}>
-                            ❌ Hủy
-                          </button>
+                          <button onClick={handleCancelCrop}>❌ Hủy</button>
                         </div>
                       </div>
                     )}
@@ -180,8 +210,11 @@ function Profile() {
                     </p>
                     <p>
                       <strong>Ngày sinh:</strong>{" "}
-                      {user.ngaySinh || "Chưa cập nhật"}
+                      {user.ngaySinh
+                        ? new Date(user.ngaySinh).toLocaleDateString("vi-VN")
+                        : "Chưa cập nhật"}
                     </p>
+
                     <p>
                       <strong>Email:</strong> {user.email || "Chưa cập nhật"}
                     </p>
@@ -196,16 +229,38 @@ function Profile() {
                     <div className="profile-actions">
                       <button
                         className="action-button"
-                        onClick={handleUpdateInfo}
+                        onClick={() => setShowEdit(true)}
                       >
                         ✏️ Cập nhật thông tin
                       </button>
-                      <button
-                        className="action-button"
-                        onClick={handleChangePassword}
-                      >
-                        🔑 Đổi mật khẩu
-                      </button>
+
+                      {showEdit && (
+                        <SuaThongTin
+                          user={user}
+                          onClose={() => setShowEdit(false)}
+                          onUpdated={(newUser) => setUser(newUser)}
+                        />
+                      )}
+
+                      {/* ✅ chỉ hiển thị nếu user không có googleId */}
+                      {!user.googleId && (
+                        <>
+                          <button
+                            className="action-button"
+                            onClick={() => setShowChange(true)}
+                          >
+                            🔑 Đổi mật khẩu
+                          </button>
+
+                          {showChange && (
+                            <DoiMatKhau
+                              user={user}
+                              onClose={() => setShowChange(false)}
+                              onUpdated={(newUser) => setUser(newUser)}
+                            />
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

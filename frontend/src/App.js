@@ -1,13 +1,13 @@
 // src/App.js
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import TrangChu from "./KhachThue/pages/TrangChu";
-import DangNhap from "./DangNhap";
+import DangNhap from "./pages/DangNhap";
 import ChuTro from "./ChuTro/pages/TrangChu";
 import ThemPhong from "./ChuTro/pages/ThemPhong";
 import ChiTietPhong from "./ChuTro/pages/ChiTietPhong";
 import DichVu from "./ChuTro/pages/DichVu";
 import TTCN from "./ChuTro/pages/TTCN";
-import QuenMK from "./QuenMK";
+import QuenMK from "./pages/QuenMK";
 import Profile from "./KhachThue/pages/Profile";
 
 function App() {

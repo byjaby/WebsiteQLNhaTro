@@ -1,0 +1,39 @@
+.role-options {
+  display: flex;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.role-card {
+  flex: 1;
+  position: relative;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 14px;
+  text-align: center;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.role-card input {
+  display: none; /* Ẩn radio mặc định */
+}
+
+.role-card:hover {
+  border-color: #3b82f6; /* xanh hover */
+}
+
+.role-card.active.nguoi-thue {
+  border-color: #5376af;
+  background: #eff6ff;
+  color: #5376af;
+  box-shadow: 0 3px 8px rgba(37, 99, 235, 0.3);
+}
+
+.role-card.active.chu-tro {
+  border-color: #ec7f25;
+  background: #f0fdf4;
+  color: #ec7f25;
+  box-shadow: 0 3px 8px rgba(34, 197, 94, 0.3);
+}

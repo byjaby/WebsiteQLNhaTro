@@ -66,18 +66,50 @@
 .nav-menu {
   display: flex;
   gap: 2rem;
+  font-weight: 500;
+  font-size: 1rem;
 }
 
 .nav-link {
   text-decoration: none;
-  color: #64748b;
-  font-weight: 500;
-  transition: color 0.3s;
+  color: #4b5563; /* xám đậm */
+  position: relative;
+  transition: color 0.3s ease;
 }
 
-.nav-link:hover,
+/* Hover underline animation */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -3px;
+  left: 0;
+  background-color: #3b82f6; /* màu xanh */
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.nav-link:hover {
+  color: #3b82f6;
+}
+
 .nav-link.active {
   color: #3b82f6;
+}
+
+.nav-link.active::after {
+  width: 100%;
+}
+
+/* Responsive: nếu nhỏ hơn 600px thì thu gọn khoảng cách */
+@media (max-width: 600px) {
+  .nav-menu {
+    gap: 1rem;
+  }
 }
 
 .header-actions {

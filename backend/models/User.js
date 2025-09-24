@@ -47,6 +47,16 @@ const userSchema = new mongoose.Schema(
       match: [/^0[0-9]{8,10}$/, "Số điện thoại không hợp lệ"],
     },
 
+    ngaySinh: {
+      type: Date,
+      validate: {
+        validator: function (value) {
+          return value < new Date(); // phải nhỏ hơn ngày hiện tại
+        },
+        message: "Ngày sinh phải nhỏ hơn ngày hiện tại",
+      },
+    },
+
     // Thông tin dành cho NGƯỜI THUÊ
     diaChi: {
       type: String,

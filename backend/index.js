@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const session = require("express-session");
@@ -20,7 +21,14 @@ app.use(
 // Khởi tạo passport
 app.use(passport.initialize());
 app.use(passport.session());
-app.use("/uploads", express.static("uploads"));
+
+// Cho phép truy cập thư mục uploads từ browser
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+const fs = require("fs");
+const uploadPath = path.join(process.cwd(), "uploads");
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath, { recursive: true });
+}
 
 // Import routes
 const itemRoutes = require("./routes/itemRoutes");
@@ -34,6 +42,11 @@ app.use("/api/items", itemRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/phong", phongRoutes);
 app.use("/api/dichvu", dichVuRoutes);
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: "Server error", error: err.message });
+});
 
 // Kết nối DB
 mongoose
