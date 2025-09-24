@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema(
       required: [true, "Vui lòng nhập tên"],
       trim: true,
     },
+    avatar: { type: String, default: "" },
     email: {
       type: String,
       required: [true, "Vui lòng nhập email"],
@@ -47,7 +48,7 @@ const userSchema = new mongoose.Schema(
     },
 
     // Thông tin dành cho NGƯỜI THUÊ
-    diaChiNguoiThue: {
+    diaChi: {
       type: String,
       required: function () {
         return this.role === "nguoi_thue" && !this.googleId;
@@ -66,7 +67,6 @@ const userSchema = new mongoose.Schema(
       required: function () {
         return this.role === "chu_tro";
       },
-      unique: true, // mỗi địa chỉ trọ là duy nhất (nhưng chỉ check ở chủ trọ)
     },
     soPhong: {
       type: Number,

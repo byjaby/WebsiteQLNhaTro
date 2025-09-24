@@ -1,13 +1,14 @@
 // src/App.js
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import TrangChu from "./KhachThue/TrangChu";
-import DangNhap from "./KhachThue/DangNhap";
-import ChuTro from "./ChuTro/TrangChu";
-import ThemPhong from "./ChuTro/ThemPhong";
-import ChiTietPhong from "./ChuTro/ChiTietPhong";
-import DichVu from "./ChuTro/DichVu";
-import TTCN from "./ChuTro/TTCN";
-import QuenMK from "./KhachThue/QuenMK";
+import TrangChu from "./KhachThue/pages/TrangChu";
+import DangNhap from "./DangNhap";
+import ChuTro from "./ChuTro/pages/TrangChu";
+import ThemPhong from "./ChuTro/pages/ThemPhong";
+import ChiTietPhong from "./ChuTro/pages/ChiTietPhong";
+import DichVu from "./ChuTro/pages/DichVu";
+import TTCN from "./ChuTro/pages/TTCN";
+import QuenMK from "./QuenMK";
+import Profile from "./KhachThue/pages/Profile";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/dich-vu" element={<DichVu />} />
         <Route path="/ttcn" element={<TTCN />} />
         <Route path="/quen-mat-khau" element={<QuenMK />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>
   );

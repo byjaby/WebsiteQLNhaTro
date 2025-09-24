@@ -1,0 +1,206 @@
+.tenant-dashboard {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(to bottom right, #e0f2fe, #fef9ff);
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.tenant-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.tenant-header h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #1d4ed8;
+}
+
+.tenant-header p {
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.room-info-card {
+  padding: 1.5rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.left-column h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #111827;
+  text-align: center;
+}
+
+.right-column h2{
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #111827;
+  text-align: center;
+}
+
+.room-info-card p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.quick-actions h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #374151;
+}
+
+.actions-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.action-button {
+  flex: 1;
+  min-width: 180px;
+  padding: 1rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.action-button:hover {
+  background: #2563eb;
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  border-right: 2px solid #e5e7eb; /* vạch phân chia thông tin cá nhân & trọ */
+  padding-right: 1rem;
+}
+
+/* Thao tác cá nhân */
+.profile-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.profile-actions .action-button {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.profile-actions .action-button:hover {
+  background: #2563eb;
+}
+
+/* Avatar */
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatar-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #3b82f6;
+  margin-bottom: 0.5rem;
+}
+
+.avatar-upload {
+  cursor: pointer;
+}
+
+.profile-grid-2cols {
+  display: flex;
+  gap: 2rem;
+}
+/* Cột trái */
+.left-column {
+  flex: 6; /* chiếm 7/10 */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-right: 2px solid #e5e7eb; /* vạch phân chia cột trái và phải */
+  padding-right: 1rem;
+}
+
+/* Cột phải */
+.right-column {
+  flex: 4; /* chiếm 3/10 */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-left: 1rem;
+}
+
+.profile-header {
+  margin-bottom: 1.5rem;
+}
+
+/* Thông tin trọ 3/10 */
+.room-section {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: #f9fafb;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  padding-left: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .profile-grid-2cols {
+    flex-direction: column;
+  }
+
+  .left-column,
+  .right-column {
+    flex: unset;
+    border-right: none;
+    padding: 0;
+  }
+}
+
+.cropper-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.cropper-container {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  background: #333;
+}
+
+.cropper-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}

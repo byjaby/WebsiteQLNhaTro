@@ -1,0 +1,45 @@
+/* NhaTroCard.css */
+.nhatro-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: 12px;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.nhatro-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+}
+
+.nhatro-card h4 {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 600;
+  color: #2d3748; /* giống text-gray-800 */
+  margin-bottom: 12px;
+}
+
+.nhatro-card p {
+  margin: 6px 0;
+  font-size: 15px;
+  color: #4a5568; /* giống text-gray-600 */
+}
+
+.nhatro-card p span {
+  font-weight: 500;
+}
+
+.nhatro-card .so-phong {
+  color: #f97316; /* cam */
+  font-weight: 600;
+}
+
+.nhatro-card .gia {
+  color: #16a34a; /* xanh lá */
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 8px;
+}

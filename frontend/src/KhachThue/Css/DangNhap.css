@@ -164,25 +164,10 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* Auth options */
 .auth-options {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end; /* đẩy nội dung sang phải */
   align-items: center;
-}
-
-.remember-me {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 14px;
-}
-
-.remember-me input {
-  width: 16px;
-  height: 16px;
-  margin-right: 8px;
 }
 
 .forgot-password {
@@ -195,6 +180,7 @@
 .forgot-password:hover {
   color: #FCA311;
 }
+
 
 /* Auth button */
 .auth-button {

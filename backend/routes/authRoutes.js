@@ -8,6 +8,9 @@ const nodemailer = require("nodemailer");
 const Otp = require("../models/Otp");
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const multer = require("multer");
+const fs = require("fs");
+const path = require("path");
 
 const router = express.Router();
 
@@ -29,7 +32,7 @@ passport.use(
             name: profile.displayName,
             email: profile.emails[0].value,
             googleId: profile.id,
-            role: "khach_thue",
+            role: "nguoi_thue",
           });
         }
 
@@ -86,7 +89,7 @@ router.post("/register", async (req, res) => {
       role,
       tenTro,
       diaChiNhaTro,
-      diaChiNguoiThue,
+      diaChi,
       soDienThoai,
     } = req.body;
 
@@ -110,11 +113,17 @@ router.post("/register", async (req, res) => {
     if (existingPhone) {
       return res.status(400).json({ message: "Số điện thoại đã được sử dụng" });
     }
-    const existingAddress = await User.findOne({ diaChiNhaTro });
-    if (existingAddress) {
-      return res
-        .status(400)
-        .json({ message: "Địa chỉ nhà trọ đã được sử dụng" });
+    // Kiểm tra địa chỉ nhà trọ chỉ áp dụng cho chủ trọ
+    if (role === "chu_tro" && diaChiNhaTro) {
+      const existingAddress = await User.findOne({
+        diaChiNhaTro,
+        role: "chu_tro",
+      });
+      if (existingAddress) {
+        return res
+          .status(400)
+          .json({ message: "Địa chỉ nhà trọ đã được sử dụng" });
+      }
     }
 
     // Hash mật khẩu
@@ -126,9 +135,9 @@ router.post("/register", async (req, res) => {
       password: hashedPassword,
       role: role || "nguoi_thue",
       soDienThoai,
+      diaChi: role === "nguoi_thue" ? diaChi : undefined,
       tenTro: role === "chu_tro" ? tenTro : undefined,
       diaChiNhaTro: role === "chu_tro" ? diaChiNhaTro : undefined,
-      diaChiNguoiThue: role === "nguoi_thue" ? diaChiNguoiThue : undefined,
     });
 
     const savedUser = await newUser.save();
@@ -450,6 +459,44 @@ router.post("/reset-password", async (req, res) => {
     await user.save();
 
     res.json({ message: "Đổi mật khẩu thành công" });
+  } catch (err) {
+    res.status(500).json({ message: "Lỗi server", error: err.message });
+  }
+});
+
+// Cấu hình multer lưu ảnh vào thư mục uploads/
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadPath = path.join(__dirname, "../uploads/avatars");
+
+    // Nếu chưa có thư mục thì tạo
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+
+    cb(null, uploadPath);
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage: multer.memoryStorage() });
+
+router.post("/:id/avatar", upload.single("avatar"), async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Lấy buffer từ file upload
+    const avatarBase64 = req.file.buffer.toString("base64");
+
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { avatar: avatarBase64 },
+      { new: true }
+    );
+
+    res.json({ message: "Upload thành công", avatar: user.avatar, user });
   } catch (err) {
     res.status(500).json({ message: "Lỗi server", error: err.message });
   }

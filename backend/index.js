@@ -20,12 +20,16 @@ app.use(
 // Khởi tạo passport
 app.use(passport.initialize());
 app.use(passport.session());
+app.use("/uploads", express.static("uploads"));
+
 // Import routes
 const itemRoutes = require("./routes/itemRoutes");
 const authRoutes = require("./routes/authRoutes");
 const phongRoutes = require("./routes/Phong");
 const dichVuRoutes = require("./routes/DichVu");
+const nhaTroRoutes = require("./routes/nhaTro");
 
+app.use("/api/nha-tro", nhaTroRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/phong", phongRoutes);
