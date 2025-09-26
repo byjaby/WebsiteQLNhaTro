@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import "../Css/Header.css";
 import { useState } from "react";
 
-function Header({ user, onLogout }) {
+function MainHeader({ user, onLogout }) {
   const [open, setOpen] = useState(false);
 
   const toggleMenu = () => setOpen(!open);
@@ -66,4 +66,4 @@ function Header({ user, onLogout }) {
   );
 }
 
-export default Header;
+export default MainHeader;

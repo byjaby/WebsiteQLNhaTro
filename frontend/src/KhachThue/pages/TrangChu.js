@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../Css/TrangChu.css";
-
-import Header from "../components/Header";
+import MainHeader from "../components/MainHeader";
 import Footer from "../components/Footer";
 import Filters from "../components/Filters";
 import NhaTroCard from "../components/NhaTroCard";
@@ -37,7 +36,7 @@ function TrangChu() {
     localStorage.clear();
     sessionStorage.clear();
     setUser(null);
-    navigate("/dang-nhap");
+    navigate("/");
   };
 
   // ✅ Lọc nhà trọ
@@ -80,7 +79,7 @@ function TrangChu() {
   return (
     <div className="homepage-container">
       {/* Header */}
-      <Header user={user} onLogout={handleLogout} />
+      <MainHeader user={user} onLogout={handleLogout} />
 
       {/* Hero Section */}
       <HeroSection searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
@@ -106,7 +105,7 @@ function TrangChu() {
 
         <div className="rooms-grid">
           {sortedTro.map((tro) => (
-            <NhaTroCard key={tro.id} tro={tro} />
+            <NhaTroCard key={tro.id} tro={tro} user={user} />
           ))}
         </div>
       </section>

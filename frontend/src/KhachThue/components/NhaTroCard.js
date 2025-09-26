@@ -1,8 +1,30 @@
+import { useNavigate } from "react-router-dom";
 import "../Css/NhaTroCard.css";
 
-function NhaTroCard({ tro }) {
+function toSlug(str) {
+  return str
+    .normalize("NFD") // bỏ dấu tiếng Việt
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .replace(/\s+/g, "") // bỏ khoảng trắng
+    .toLowerCase();
+}
+
+function NhaTroCard({ tro, user }) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    const slug = toSlug(tro.tenTro);
+    navigate(`/thong-tin-tro/${slug}`, { state: { chuTroId: tro.id, user } }); // ✅ truyền user
+  };
+
   return (
-    <div className="nhatro-card">
+    <div
+      className="nhatro-card"
+      onClick={handleClick}
+      style={{ cursor: "pointer" }}
+    >
       <h4>{tro.tenTro}</h4>
       <p>
         🏠 Chủ trọ: <span>{tro.chuTro}</span>

@@ -92,4 +92,20 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// Lấy tất cả phòng của 1 chủ trọ
+router.get("/tro/:chuTroId", async (req, res) => {
+  try {
+    const { chuTroId } = req.params;
+    const chuTro = await User.findById(chuTroId);
+    if (!chuTro)
+      return res.status(404).json({ message: "Không tìm thấy chủ trọ" });
+
+    const phongs = await Phong.find({ chuTroId });
+    res.json({ chuTro, phongs });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Lỗi server" });
+  }
+});
+
 module.exports = router;

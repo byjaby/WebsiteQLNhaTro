@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cropper from "react-easy-crop";
 import "../Css/Profile.css";
-import Header from "../components/Header";
+import CloneHeader from "../components/CloneHeader";
 import Footer from "../components/Footer";
 import defaultAvatar from "../images/default-avatar.png";
 import SuaThongTin from "../components/SuaThongTin";
@@ -132,7 +132,7 @@ function Profile() {
   return (
     <div className="homepage-container">
       {/* Header */}
-      <Header user={user} onLogout={handleLogout} />
+      <CloneHeader user={user} onLogout={handleLogout} />
 
       <div className="tenant-dashboard">
         {user.role === "nguoi_thue" ? (

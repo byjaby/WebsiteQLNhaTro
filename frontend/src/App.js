@@ -9,6 +9,7 @@ import DichVu from "./ChuTro/pages/DichVu";
 import TTCN from "./ChuTro/pages/TTCN";
 import QuenMK from "./pages/QuenMK";
 import Profile from "./KhachThue/pages/Profile";
+import ThongTinTro from "./KhachThue/pages/ThongTinTro";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/ttcn" element={<TTCN />} />
         <Route path="/quen-mat-khau" element={<QuenMK />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/thong-tin-tro/:slug" element={<ThongTinTro />} />
       </Routes>
     </BrowserRouter>
   );
