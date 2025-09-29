@@ -1,19 +1,41 @@
+.role-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+  text-align: center;
+}
+
+.role-page h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
 .role-options {
   display: flex;
   gap: 16px;
   margin-top: 12px;
 }
 
+
 .role-card {
-  flex: 1;
-  position: relative;
-  border: 2px solid #ccc;
-  border-radius: 12px;
-  padding: 14px;
-  text-align: center;
-  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 220px;
+  height: 50px;
+  border: 2px solid #ddd;
+  border-radius: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: 18px;
+  font-weight: 600;
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  position: relative;
 }
 
 .role-card input {
@@ -36,4 +58,64 @@
   background: #f0fdf4;
   color: #ec7f25;
   box-shadow: 0 3px 8px rgba(34, 197, 94, 0.3);
+}
+
+.button{
+  margin-top: 10px;
+}
+
+.role-page button {
+  padding: 12px 28px;
+  border: none;
+  border-radius: 30px;
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.role-page button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #2980b9, #1f6aa5);
+}
+
+.chu-tro-extra {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.form-row label {
+  flex: 0 0 150px; /* giữ label cố định */
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  text-align: right;
+}
+
+.input-inline {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 15px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-inline:focus {
+  border-color: #3498db;
+  box-shadow: 0 0 6px rgba(52, 152, 219, 0.3);
 }

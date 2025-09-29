@@ -5,6 +5,7 @@ import CloneHeader from "../components/CloneHeader";
 import Footer from "../components/Footer";
 import Filters from "../components/Filters";
 import Breadcrumb from "../components/Breadcrumb";
+import { useUser } from "../../context/UserContext";
 
 function ThongTinTro() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ function ThongTinTro() {
   const location = useLocation();
   const [phongs, setPhongs] = useState([]);
   const [chuTro, setChuTro] = useState(null);
-  const [user, setUser] = useState(location.state?.user || null);
+  const { user, loading, error, setUser } = useUser();
 
   // state filter
   const [searchQuery, setSearchQuery] = useState("");
@@ -33,6 +34,18 @@ function ThongTinTro() {
         .catch((err) => console.error("Lỗi fetch:", err));
     }
   }, [location.state, slug]);
+
+  if (loading) return <p>Đang tải...</p>;
+  if (error) return <p>Lỗi: {error}</p>;
+  if (!user)
+    return (
+      <p>
+        Chưa đăng nhập{" "}
+        <Link to="/dang-nhap">
+          <button className="login-btn">Đăng nhập</button>
+        </Link>
+      </p>
+    );
 
   // ✅ Logout
   const handleLogout = () => {
@@ -79,11 +92,9 @@ function ThongTinTro() {
   });
 
   return (
-    <div className="homepage-container">
-      {/* Header */}
+    <div className="container">
       <CloneHeader user={user} onLogout={handleLogout} />
 
-      {/* Thông tin trọ */}
       <div className="thongtin-container">
         <Breadcrumb
           paths={[{ label: "Trang chủ", to: "/" }, { label: "Thông tin trọ" }]}
@@ -92,6 +103,7 @@ function ThongTinTro() {
         <div className="thong-tin">
           <h2>Thông tin nhà trọ {chuTro?.tenTro}</h2>
           <h4>Chủ trọ: {chuTro?.name}</h4>
+          <p>Số điện thoại: {chuTro?.soDienThoai}</p>
           <p>Địa chỉ: {chuTro?.diaChiNhaTro}</p>
           <p>Tổng số phòng: {chuTro?.soPhong}</p>
         </div>
@@ -122,6 +134,7 @@ function ThongTinTro() {
               <h4>Phòng {phong.tenPhong}</h4>
               <p>Giá: {phong.tienPhong.toLocaleString()}đ</p>
               <p>Trạng thái: {phong.trangThai}</p>
+              <p>Số người ở tối đa: {phong.soNguoiToiDa}</p>
             </div>
           ))}
         </div>

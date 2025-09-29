@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cropper from "react-easy-crop";
 import "../Css/Profile.css";
@@ -8,44 +8,35 @@ import Footer from "../components/Footer";
 import defaultAvatar from "../images/default-avatar.png";
 import SuaThongTin from "../components/SuaThongTin";
 import DoiMatKhau from "../components/DoiMatKhau";
+import { useUser } from "../../context/UserContext";
 
 function Profile() {
   const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null); // file gốc
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null); // tọa độ crop
   const [showCropper, setShowCropper] = useState(false);
-  const [user, setUser] = useState(null);
+  const { user, loading, error, setUser } = useUser();
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
 
   const [showEdit, setShowEdit] = useState(false);
   const [showChange, setShowChange] = useState(false);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/api/auth/me", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // token lưu khi login
-          },
-        });
-        setUser(res.data);
-      } catch (err) {
-        console.error("Lỗi load user:", err);
-        navigate("/dang-nhap"); // token lỗi => đá về login
-      }
-    };
-
-    fetchUser();
-  }, [navigate]);
-
   const onCropComplete = useCallback((_, croppedPixels) => {
     setCroppedAreaPixels(croppedPixels);
   }, []);
 
-  if (!user) {
-    return <p>Không tìm thấy thông tin người dùng</p>;
-  }
+  if (loading) return <p>Đang tải...</p>;
+  if (error) return <p>Lỗi: {error}</p>;
+  if (!user)
+    return (
+      <p>
+        Chưa đăng nhập{" "}
+        <Link to="/dang-nhap">
+          <button className="login-btn">Đăng nhập</button>
+        </Link>
+      </p>
+    );
 
   const handleLogout = () => {
     localStorage.clear();

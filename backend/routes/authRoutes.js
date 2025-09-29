@@ -23,20 +23,20 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        // Kiểm tra user đã có chưa
         let user = await User.findOne({ email: profile.emails[0].value });
 
-        if (!user) {
-          // Nếu chưa có thì tạo user mới
-          user = await User.create({
+        if (user) {
+          // Đã có user -> login luôn
+          return done(null, user);
+        } else {
+          // Lần đầu -> trả dữ liệu tạm về frontend
+          const tempUser = {
             name: profile.displayName,
             email: profile.emails[0].value,
             googleId: profile.id,
-            role: "nguoi_thue",
-          });
+          };
+          return done(null, { tempUser, isNew: true });
         }
-
-        return done(null, user);
       } catch (err) {
         return done(err, null);
       }
@@ -44,30 +44,108 @@ passport.use(
   )
 );
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-passport.deserializeUser((id, done) => {
-  User.findById(id).then((user) => done(null, user));
-});
-
 router.get(
   "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    session: false,
+  })
 );
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  passport.authenticate("google", {
+    failureRedirect: "/login",
+    session: false,
+  }),
   (req, res) => {
-    // Tạo token cho frontend
+    if (req.user.isNew) {
+      // Người dùng lần đầu login -> cho chọn role
+      const { tempUser } = req.user;
+      const query = new URLSearchParams({
+        isNew: "true",
+        name: tempUser.name,
+        email: tempUser.email,
+        googleId: tempUser.googleId,
+      }).toString();
+      return res.redirect(`http://localhost:3000/chon-role?${query}`);
+    }
+
+    // Người dùng cũ -> tạo token login luôn
     const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    // Redirect về frontend kèm token
     res.redirect(`http://localhost:3000/dang-nhap?token=${token}`);
   }
 );
+
+router.post("/google/register", async (req, res) => {
+  try {
+    console.log("Body nhận từ FE:", req.body);
+
+    const { name, email, googleId, role, tenTro, diaChiNhaTro } = req.body;
+
+    // Chuẩn bị dữ liệu user
+    let newUserData = {
+      name,
+      email,
+      googleId,
+      role,
+    };
+
+    if (role === "chu_tro") {
+      // bắt buộc thêm 2 field này
+      newUserData.tenTro = tenTro;
+      newUserData.diaChiNhaTro = diaChiNhaTro;
+    }
+
+    const newUser = await User.create(newUserData);
+    console.log("User mới tạo:", newUser);
+
+    if (newUser.role === "chu_tro") {
+      try {
+        await DichVu.insertMany([
+          {
+            tenDichVu: "Điện",
+            donVi: "kWh",
+            donGia: null,
+            moTa: "",
+            chuTroId: newUser.id, // newUser.id là string của _id
+          },
+          {
+            tenDichVu: "Nước",
+            donVi: "m3",
+            donGia: null,
+            moTa: "",
+            chuTroId: newUser.id,
+          },
+        ]);
+        console.log("Tạo dịch vụ mặc định thành công cho chủ trọ:", newUser.id);
+      } catch (err) {
+        console.error("Không thể tạo dịch vụ mặc định:", err);
+      }
+    }
+
+    // Sinh token
+    const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+
+    res.json({ token, user: newUser });
+  } catch (err) {
+    console.error("Lỗi /google/register:", err);
+
+    // Nếu lỗi duplicate key thì trả thông báo đẹp hơn
+    if (err.code === 11000) {
+      return res.status(400).json({
+        message: "Giá trị đã tồn tại",
+        field: Object.keys(err.keyPattern)[0],
+      });
+    }
+
+    res.status(500).json({ error: err.message });
+  }
+});
 
 router.get("/user/:id", authMiddleware, async (req, res) => {
   try {

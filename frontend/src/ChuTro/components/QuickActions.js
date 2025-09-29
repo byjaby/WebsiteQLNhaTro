@@ -8,7 +8,9 @@ function QuickActions({ user }) {
       <div className="quick-actions-grid">
         <button
           className="quick-action-btn"
-          onClick={() => navigate("/dich-vu", { state: { chuTroId: user.id } })}
+          onClick={() =>
+            navigate("/dich-vu", { state: { chuTroId: user._id } })
+          }
         >
           🛠️ Dịch vụ
         </button>

@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../Css/ChiTietPhong.css";
+import "../../Css/ChiTietPhong.css";
+import { useUser } from "../../../context/UserContext";
 
 function ChiTietPhong() {
   const { id } = useParams();
@@ -15,6 +16,7 @@ function ChiTietPhong() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [loading, setLoading] = useState(false); // loading chung cho save / delete
   const [fetching, setFetching] = useState(true); // loading khi fetch ban đầu
+  const { user, error, setUser } = useUser();
 
   useEffect(() => {
     const fetchPhong = async () => {
@@ -34,6 +36,18 @@ function ChiTietPhong() {
     };
     fetchPhong();
   }, [id, location.state]);
+
+  if (loading) return <p>Đang tải...</p>;
+  if (error) return <p>Lỗi: {error}</p>;
+  if (!user)
+    return (
+      <p>
+        Chưa đăng nhập{" "}
+        <Link to="/dang-nhap">
+          <button className="login-btn">Đăng nhập</button>
+        </Link>
+      </p>
+    );
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

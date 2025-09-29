@@ -67,10 +67,6 @@ router.delete("/:id", async (req, res) => {
     if (!dichVu)
       return res.status(404).json({ error: "Không tìm thấy dịch vụ" });
 
-    if (dichVu.tenDichVu === "Điện" || dichVu.tenDichVu === "Nước") {
-      return res.status(400).json({ error: "Không thể xóa dịch vụ mặc định" });
-    }
-
     await DichVu.findByIdAndDelete(req.params.id);
     res.json({ message: "Xóa thành công" });
   } catch (err) {

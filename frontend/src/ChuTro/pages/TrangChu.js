@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../Css/TrangChu.css";
 import Header from "../components/Header";
@@ -8,40 +8,55 @@ import StatsCards from "../components/StatsCards";
 import SearchFilter from "../components/SearchFilter";
 import RoomsGrid from "../components/RoomsGrid";
 import Footer from "../components/Footer";
+import { useUser } from "../../context/UserContext";
 
 function TrangChu() {
-  const [user, setUser] = useState(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [rooms, setRooms] = useState([]);
 
+  // 👉 lấy user trực tiếp từ hook
+  const { user, loading, error, setUser } = useUser();
   useEffect(() => {
-    const savedUser =
-      localStorage.getItem("user") || sessionStorage.getItem("user");
-    if (savedUser) {
-      const parsedUser = JSON.parse(savedUser);
-      if (parsedUser.role === "chu_tro") setUser(parsedUser);
-      else navigate("/");
-    } else navigate("/");
-  }, [navigate]);
+    if (!user) {
+      navigate("/"); // chưa đăng nhập thì về trang chủ
+      return;
+    }
 
-  useEffect(() => {
-    if (!user) return;
+    if (user.role === "chu_tro") {
+      navigate("/chu-tro"); // nếu là chủ trọ thì sang trang chủ trọ
+      return;
+    }
+
+    if (user.role === "nguoi_thue") {
+      setUser(user); // lưu lại user
+    }
+
     axios
-      .get(`http://localhost:5000/api/phong/chu-tro/${user.id}`)
+      .get(`http://localhost:5000/api/phong/chu-tro/${user._id}`)
       .then((res) => setRooms(res.data))
       .catch((err) => console.error("Lỗi khi load phòng:", err));
-  }, [user]);
+  }, [user, navigate, setUser]);
+
+  if (loading) return <p>Đang tải...</p>;
+  if (error) return <p>Lỗi: {error}</p>;
+  if (!user)
+    return (
+      <p>
+        Chưa đăng nhập{" "}
+        <Link to="/dang-nhap">
+          <button className="login-btn">Đăng nhập</button>
+        </Link>
+      </p>
+    );
 
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
-    setUser(null);
+    setUser(null); // 👉 bây giờ hợp lệ vì đã destructure từ hook
     navigate("/dang-nhap");
   };
-
-  if (!user) return null;
 
   const totalRooms = rooms.length;
   const occupiedRooms = rooms.filter((r) => r.trangThai === "Đã thuê").length;
@@ -73,7 +88,7 @@ function TrangChu() {
           filterStatus={filterStatus}
           setFilterStatus={setFilterStatus}
           onAddRoom={() =>
-            navigate("/them-phong", { state: { chuTroId: user.id } })
+            navigate("/them-phong", { state: { chuTroId: user._id } })
           }
         />
         <RoomsGrid rooms={filteredRooms} />

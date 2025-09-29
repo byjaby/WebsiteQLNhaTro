@@ -7,8 +7,6 @@ const User = require("../models/User"); // ✅ thêm
 // 🏠 Thêm phòng
 router.post("/", async (req, res) => {
   try {
-    console.log("📥 Nhận dữ liệu từ client:", req.body);
-
     if (!req.body.chuTroId) {
       return res.status(400).json({ error: "Thiếu chuTroId" });
     }

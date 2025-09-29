@@ -1,10 +1,11 @@
-// ThemPhong.js
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
-import "../Css/ThemPhong.css";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import "../../Css/ThemPhong.css";
+import { useUser } from "../../../context/UserContext";
 
 function ThemPhong() {
+  const { user, loading, error, setUser } = useUser();
   const [formData, setFormData] = useState({
     tenPhong: "",
     chieuDai: "",
@@ -14,16 +15,19 @@ function ThemPhong() {
     trangThai: "Trống",
   });
 
-  const location = useLocation();
   const navigate = useNavigate();
 
-  // Lấy chuTroId từ navigate hoặc localStorage/sessionStorage
-  const savedUser =
-    localStorage.getItem("user") || sessionStorage.getItem("user");
-  const user = savedUser ? JSON.parse(savedUser) : null;
-
-  // Ưu tiên lấy từ navigate, nếu không có thì fallback sang user.id
-  const chuTroId = location.state?.chuTroId || user?.id || null;
+  if (loading) return <p>Đang tải...</p>;
+  if (error) return <p>Lỗi: {error}</p>;
+  if (!user)
+    return (
+      <p>
+        Chưa đăng nhập{" "}
+        <Link to="/dang-nhap">
+          <button className="login-btn">Đăng nhập</button>
+        </Link>
+      </p>
+    );
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -32,15 +36,25 @@ function ThemPhong() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!chuTroId) {
-      alert("Không tìm thấy chủ trọ, vui lòng đăng nhập lại!");
-      navigate("/dang-nhap"); // điều hướng về đăng nhập
+    const requiredFields = ["ngaySinh", "soDienThoai"];
+    const missingFields = requiredFields.filter((field) => !user?.[field]);
+
+    if (missingFields.length > 0) {
+      const confirmEdit = window.confirm(
+        "Thông tin cá nhân của bạn chưa đầy đủ!\n" +
+          "Bạn cần cập nhật thông tin cá nhân trước khi thêm phòng.\n" +
+          "Có muốn chuyển đến trang chỉnh sửa thông tin cá nhân không?"
+      );
+
+      if (confirmEdit) {
+        navigate("/ttcn", { state: { forceEdit: true } });
+      }
       return;
     }
 
     const dataToSend = {
       ...formData,
-      chuTroId,
+      chuTroId: user._id,
       chieuDai: parseFloat(formData.chieuDai),
       chieuRong: parseFloat(formData.chieuRong),
       soNguoiToiDa: parseInt(formData.soNguoiToiDa, 10),
@@ -48,7 +62,6 @@ function ThemPhong() {
     };
 
     try {
-      console.log("📤 Gửi dữ liệu thêm phòng:", dataToSend);
       await axios.post("http://localhost:5000/api/phong", dataToSend);
       alert("Thêm phòng thành công!");
       navigate("/chu-tro");

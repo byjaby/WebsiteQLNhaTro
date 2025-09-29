@@ -142,11 +142,10 @@ const DangNhap = () => {
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
 
-          // 👉 Điều hướng theo role
           if (data.user.role === "chu_tro") {
             navigate("/chu-tro", { state: { user: data.user } });
           } else {
-            navigate("/");
+            navigate("/", { state: { user: data.user } });
           }
         } else {
           setIsLogin(true);

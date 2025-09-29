@@ -6,9 +6,10 @@ import Footer from "../components/Footer";
 import Filters from "../components/Filters";
 import NhaTroCard from "../components/NhaTroCard";
 import HeroSection from "../components/HeroSection";
+import { useUser } from "../../context/UserContext";
 
 function TrangChu() {
-  const [user, setUser] = useState(null);
+  const { user, loading, error, setUser } = useUser();
   const [searchQuery, setSearchQuery] = useState("");
   const [priceRange, setPriceRange] = useState("all");
   const [sortBy, setSortBy] = useState("price-asc");
@@ -18,18 +19,27 @@ function TrangChu() {
 
   // ✅ Lấy user và dữ liệu nhà trọ
   useEffect(() => {
-    const savedUser =
-      localStorage.getItem("user") || sessionStorage.getItem("user");
-    if (savedUser) {
-      const parsedUser = JSON.parse(savedUser);
-      if (parsedUser.role === "nguoi_thue") setUser(parsedUser);
-      else navigate("/chu-tro");
-    } else navigate("/");
+    if (!user) {
+      navigate("/"); // chưa đăng nhập thì về trang chủ
+      return;
+    }
+
+    if (user.role === "chu_tro") {
+      navigate("/chu-tro"); // nếu là chủ trọ thì sang trang chủ trọ
+      return;
+    }
+
+    if (user.role === "nguoi_thue") {
+      setUser(user); // lưu lại user
+    }
     fetch("http://localhost:5000/api/nha-tro")
       .then((res) => res.json())
       .then((data) => setNhaTros(data))
       .catch((err) => console.error("Lỗi fetch:", err));
-  }, [navigate]);
+  });
+
+  if (loading) return <p>Đang tải...</p>;
+  if (error) return <p>Lỗi: {error}</p>;
 
   // ✅ Logout
   const handleLogout = () => {
@@ -105,7 +115,7 @@ function TrangChu() {
 
         <div className="rooms-grid">
           {sortedTro.map((tro) => (
-            <NhaTroCard key={tro.id} tro={tro} user={user} />
+            <NhaTroCard key={tro.id} tro={tro} />
           ))}
         </div>
       </section>

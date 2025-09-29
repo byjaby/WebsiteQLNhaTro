@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import "../Css/NhaTroCard.css";
+import { useUser } from "../../context/UserContext";
 
 function toSlug(str) {
   return str
@@ -11,8 +12,9 @@ function toSlug(str) {
     .toLowerCase();
 }
 
-function NhaTroCard({ tro, user }) {
+function NhaTroCard({ tro }) {
   const navigate = useNavigate();
+  const { user, loading, error, setUser } = useUser();
 
   const handleClick = () => {
     const slug = toSlug(tro.tenTro);
