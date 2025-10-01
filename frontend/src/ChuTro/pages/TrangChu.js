@@ -24,13 +24,9 @@ function TrangChu() {
       return;
     }
 
-    if (user.role === "chu_tro") {
-      navigate("/chu-tro"); // nếu là chủ trọ thì sang trang chủ trọ
-      return;
-    }
-
     if (user.role === "nguoi_thue") {
-      setUser(user); // lưu lại user
+      navigate("/"); // nếu là chủ trọ thì sang trang chủ trọ
+      return;
     }
 
     axios
@@ -55,7 +51,7 @@ function TrangChu() {
     localStorage.clear();
     sessionStorage.clear();
     setUser(null); // 👉 bây giờ hợp lệ vì đã destructure từ hook
-    navigate("/dang-nhap");
+    navigate("/");
   };
 
   const totalRooms = rooms.length;

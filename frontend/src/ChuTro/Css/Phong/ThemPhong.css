@@ -1,16 +1,22 @@
+.main {
+  width: 90%;
+  margin: 0 auto;
+}
+
 .add-room-form {
-  max-width: 500px;
-  margin: 40px auto;
+  width: 50%;
   padding: 25px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
   font-family: Arial, sans-serif;
+  margin: auto;
+  margin-bottom: 10px;
 }
 
 .add-room-form h2 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   color: #333;
 }
 
@@ -20,7 +26,7 @@
 }
 
 .add-room-form label {
-  margin-top: 12px;
+  margin-top: 10px;
   font-weight: bold;
   color: #444;
 }
@@ -43,16 +49,20 @@
 }
 
 .add-room-form button {
-  margin-top: 20px;
-  padding: 12px;
+  margin-top: 10px;
+  padding: 10px 20px; /* thêm padding ngang cho đẹp */
   font-size: 16px;
-  background: #007bff;
+  background: #2b970a;
   color: white;
+  font-weight: bold;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   transition: background 0.2s ease-in-out;
+  width: auto; 
+  align-self: center; /* 👈 căn giữa nút trong form */
 }
+
 
 .add-room-form button:hover {
   background: #0056b3;

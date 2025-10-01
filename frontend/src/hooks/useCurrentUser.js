@@ -7,7 +7,9 @@ function useCurrentUser() {
   const [error, setError] = useState(null);
   useEffect(() => {
     const token = localStorage.getItem("token");
+
     if (!token) {
+      setUser(null);
       setLoading(false);
       return;
     }
@@ -25,7 +27,7 @@ function useCurrentUser() {
       }
     };
     fetchUser();
-  }, []);
+  });
   return { user, loading, error, setUser };
 }
 export default useCurrentUser;

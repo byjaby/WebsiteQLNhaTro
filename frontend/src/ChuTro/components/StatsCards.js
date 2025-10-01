@@ -1,30 +1,25 @@
-import "../Css/TrangChu.css";
+import "../Css/StatsCards.css";
+
 function StatsCards({ total, occupied, vacant }) {
+  const stats = [
+    { label: "Tổng phòng", value: total, icon: "🏠", color: "blue" },
+    { label: "Đã thuê", value: occupied, icon: "👥", color: "green" },
+    { label: "Phòng trống", value: vacant, icon: "📅", color: "purple" },
+  ];
   return (
     <div className="stats-grid">
-      <div className="stat-card">
-        <div className="stat-info">
-          <p className="stat-label">Tổng phòng</p>
-          <p className="stat-value">{total}</p>
+      {" "}
+      {stats.map((stat, idx) => (
+        <div key={idx} className="stat-card">
+          {" "}
+          <div className="stat-info">
+            {" "}
+            <p className="stat-label">{stat.label}</p>{" "}
+            <p className={`stat-value ${stat.color}`}>{stat.value}</p>{" "}
+          </div>{" "}
+          <div className={`stat-icon ${stat.color}`}> {stat.icon} </div>{" "}
         </div>
-        <span>🏠</span>
-      </div>
-
-      <div className="stat-card">
-        <div className="stat-info">
-          <p className="stat-label">Đã thuê</p>
-          <p className="stat-value occupied">{occupied}</p>
-        </div>
-        <span>👥</span>
-      </div>
-
-      <div className="stat-card">
-        <div className="stat-info">
-          <p className="stat-label">Phòng trống</p>
-          <p className="stat-value vacant">{vacant}</p>
-        </div>
-        <span>📅</span>
-      </div>
+      ))}{" "}
     </div>
   );
 }

@@ -4,46 +4,52 @@ import { useState } from "react";
 
 function Header({ user, onLogout }) {
   const [open, setOpen] = useState(false);
-
   const toggleMenu = () => setOpen(!open);
   return (
     <header className="header">
-      <div className="header-content">
-        <div className="header-left">
-          <div className="logo-section">
-            <div className="building-icon">🏢</div>
-            <h1 className="title">Quản lý nhà trọ</h1>
-          </div>
-        </div>
-        <div className="header-right">
-          <button className="icon-button">🔔</button>
-          <button className="icon-button">⚙️</button>
-          <div className="header-actions">
-            {user ? (
+      {" "}
+      <div className="header-container">
+        {" "}
+        <div className="header-content">
+          {" "}
+          <div className="logo-wrap">
+            {" "}
+            <Link to="/chu-tro" className="logo-link">
+              {" "}
+              <div className="logo-icon">🏢</div>{" "}
+              <h1 className="logo-text">Quản lý nhà trọ</h1>{" "}
+            </Link>{" "}
+          </div>{" "}
+          <div className="actions">
+            {" "}
+            <button className="icon-btn">🔔</button>{" "}
+            <button className="icon-btn">⚙️</button>{" "}
+            {user && (
               <div className="user-menu">
-                <button className="user-menu-toggle" onClick={toggleMenu}>
-                  {user.name} ⏷
-                </button>
-
+                {" "}
+                <button className="user-btn" onClick={toggleMenu}>
+                  {" "}
+                  {user.name}{" "}
+                  <span className={`arrow ${open ? "rotate" : ""}`}>⏷</span>{" "}
+                </button>{" "}
                 {open && (
-                  <div className="user-menu-dropdown">
-                    <Link
-                      to="/ttcn"
-                      state={{ user }}
-                      className="user-menu-item"
-                    >
-                      👤 Thông tin cá nhân
-                    </Link>
-                    <button className="user-menu-item" onClick={onLogout}>
-                      🚪 Đăng xuất
-                    </button>
+                  <div className="dropdown">
+                    {" "}
+                    <Link to="/ttcn" state={{ user }} className="dropdown-item">
+                      {" "}
+                      👤 Thông tin cá nhân{" "}
+                    </Link>{" "}
+                    <button onClick={onLogout} className="dropdown-item">
+                      {" "}
+                      🚪 Đăng xuất{" "}
+                    </button>{" "}
                   </div>
-                )}
+                )}{" "}
               </div>
-            ) : null}
-          </div>
-        </div>
-      </div>
+            )}{" "}
+          </div>{" "}
+        </div>{" "}
+      </div>{" "}
     </header>
   );
 }

@@ -1,4 +1,5 @@
 import DichVuRow from "./DichVuRow";
+import "../../Css/DichVu/BangDV.css";
 
 function BangDV({ dichVuList, setDichVuList, editingId, setEditingId }) {
   return (

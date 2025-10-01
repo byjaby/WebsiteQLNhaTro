@@ -1,0 +1,43 @@
+.quick-actions-card { 
+    background: #fff; 
+    border: 1px solid #e5e7eb; 
+    border-radius: 16px; 
+    padding: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); 
+    width: 90%;
+    margin: auto;
+    margin-top: 20px;
+}
+.quick-actions-title { 
+    font-size: 25px;
+    font-weight: 600; 
+    color: #1f2937; 
+    margin-bottom: 10px; 
+    text-align: center;
+}
+.quick-actions-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); 
+    gap: 12px; 
+}
+.quick-action-btn { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 6px; 
+    padding: 16px; 
+    background: #EB5E28; 
+    border: none; 
+    border-radius: 12px; 
+    font-size: 18px; 
+    font-weight: 500; 
+    color: #fff; 
+    cursor: pointer; 
+    transition: all 0.2s ease; 
+}
+.quick-action-btn span { font-size: 24px;}
+.quick-action-btn:hover { 
+    background: #8D0801; 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.08); 
+    transform: translateY(-2px); 
+}

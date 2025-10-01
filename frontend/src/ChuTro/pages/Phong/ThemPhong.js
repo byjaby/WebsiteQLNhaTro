@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import "../../Css/ThemPhong.css";
+import "../../Css/Phong/ThemPhong.css";
 import { useUser } from "../../../context/UserContext";
+import "../../Css/TrangChu.css";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import Breadcrumb from "../../components/Breadcrumb";
 
 function ThemPhong() {
   const { user, loading, error, setUser } = useUser();
@@ -28,7 +32,12 @@ function ThemPhong() {
         </Link>
       </p>
     );
-
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    setUser(null); // 👉 bây giờ hợp lệ vì đã destructure từ hook
+    navigate("/");
+  };
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -77,56 +86,72 @@ function ThemPhong() {
   };
 
   return (
-    <div className="add-room-form">
-      <h2>Thêm phòng mới</h2>
-      <form onSubmit={handleSubmit}>
-        <label>Tên phòng</label>
-        <input type="text" name="tenPhong" onChange={handleChange} required />
+    <div className="dashboard-container">
+      <Header user={user} onLogout={handleLogout} />
+      <div className="main-content">
+        <div className="main">
+          <Breadcrumb
+            paths={[{ label: "Trang chủ", to: "/" }, { label: "Thêm phòng" }]}
+          />
+        </div>
+        <div className="add-room-form">
+          <h2>Thêm phòng mới</h2>
+          <form onSubmit={handleSubmit}>
+            <label>Tên phòng</label>
+            <input
+              type="text"
+              name="tenPhong"
+              onChange={handleChange}
+              required
+            />
 
-        <label>Chiều dài (m)</label>
-        <input
-          type="number"
-          name="chieuDai"
-          step="0.1"
-          onChange={handleChange}
-          required
-        />
+            <label>Chiều dài (m)</label>
+            <input
+              type="number"
+              name="chieuDai"
+              step="0.1"
+              onChange={handleChange}
+              required
+            />
 
-        <label>Chiều rộng (m)</label>
-        <input
-          type="number"
-          name="chieuRong"
-          step="0.1"
-          onChange={handleChange}
-          required
-        />
+            <label>Chiều rộng (m)</label>
+            <input
+              type="number"
+              name="chieuRong"
+              step="0.1"
+              onChange={handleChange}
+              required
+            />
 
-        <label>Số người ở tối đa</label>
-        <input
-          type="number"
-          name="soNguoiToiDa"
-          onChange={handleChange}
-          required
-        />
+            <label>Số người ở tối đa</label>
+            <input
+              type="number"
+              name="soNguoiToiDa"
+              onChange={handleChange}
+              required
+            />
 
-        <label>Tiền phòng (VND)</label>
+            <label>Tiền phòng (VND)</label>
 
-        <input
-          type="number"
-          name="tienPhong"
-          onChange={handleChange}
-          required
-        />
-        <span>Lưu ý: không nhập dấu "," và "."</span>
-        <label>Trạng thái</label>
-        <select name="trangThai" onChange={handleChange}>
-          <option value="Trống">Trống</option>
-          <option value="Đã thuê">Đã thuê</option>
-          <option value="Bảo trì">Bảo trì</option>
-        </select>
+            <input
+              type="number"
+              name="tienPhong"
+              onChange={handleChange}
+              required
+            />
+            <span>Lưu ý: không nhập dấu "," và "."</span>
+            <label>Trạng thái</label>
+            <select name="trangThai" onChange={handleChange}>
+              <option value="Trống">Trống</option>
+              <option value="Đã thuê">Đã thuê</option>
+              <option value="Bảo trì">Bảo trì</option>
+            </select>
 
-        <button type="submit">Lưu</button>
-      </form>
+            <button type="submit">Lưu</button>
+          </form>
+        </div>
+        <Footer />
+      </div>
     </div>
   );
 }

@@ -1,0 +1,24 @@
+.add-service-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  align-items: center; 
+  flex-direction: row;
+  justify-content: center;
+}
+
+.add-service-form input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.add-service-form button {
+  background: #28a745;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 10%;
+  cursor: pointer;
+  font-weight: bold;
+}

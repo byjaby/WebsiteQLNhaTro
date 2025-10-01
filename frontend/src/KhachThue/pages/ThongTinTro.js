@@ -37,15 +37,6 @@ function ThongTinTro() {
 
   if (loading) return <p>Đang tải...</p>;
   if (error) return <p>Lỗi: {error}</p>;
-  if (!user)
-    return (
-      <p>
-        Chưa đăng nhập{" "}
-        <Link to="/dang-nhap">
-          <button className="login-btn">Đăng nhập</button>
-        </Link>
-      </p>
-    );
 
   // ✅ Logout
   const handleLogout = () => {

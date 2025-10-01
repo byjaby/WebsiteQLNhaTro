@@ -19,8 +19,10 @@ import RoleOptions from "../components/RoleOptions";
 import SocialLogin from "../components/SocialLogin";
 import ToggleMode from "../components/ToggleMode";
 import AuthCard from "../components/AuthCard";
+import { useUser } from "../context/UserContext";
 
 const DangNhap = () => {
+  const { setUser } = useUser();
   const location = useLocation();
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
@@ -141,11 +143,11 @@ const DangNhap = () => {
         if (isLogin) {
           localStorage.setItem("token", data.token);
           localStorage.setItem("user", JSON.stringify(data.user));
-
+          setUser(data.user);
           if (data.user.role === "chu_tro") {
-            navigate("/chu-tro", { state: { user: data.user } });
+            navigate("/chu-tro");
           } else {
-            navigate("/", { state: { user: data.user } });
+            navigate("/");
           }
         } else {
           setIsLogin(true);

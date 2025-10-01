@@ -1,24 +1,35 @@
 import { useNavigate } from "react-router-dom";
+import "../Css/QuickActions.css";
 
 function QuickActions({ user }) {
   const navigate = useNavigate();
+  const actions = [
+    { icon: "🛠️", label: "Dịch vụ", path: "/dich-vu" },
+    { icon: "👥", label: "Khách thuê", path: "/khach-thue" },
+    { icon: "💳", label: "Thu tiền", path: "/thu-tien" },
+    { icon: "⚠️", label: "Báo cáo sự cố", path: "/su-co" },
+    { icon: "📈", label: "Báo cáo", path: "/bao-cao" },
+  ];
+  const handleClick = (path) => {
+    navigate(path, { state: { chuTroId: user._id } });
+  };
   return (
     <div className="quick-actions-card">
-      <h3 className="quick-actions-title">Thao tác nhanh</h3>
+      {" "}
+      <h3 className="quick-actions-title">Tiện ích</h3>{" "}
       <div className="quick-actions-grid">
-        <button
-          className="quick-action-btn"
-          onClick={() =>
-            navigate("/dich-vu", { state: { chuTroId: user._id } })
-          }
-        >
-          🛠️ Dịch vụ
-        </button>
-        <button className="quick-action-btn">👥 Khách thuê</button>
-        <button className="quick-action-btn">💳 Thu tiền</button>
-        <button className="quick-action-btn">⚠️ Báo cáo sự cố</button>
-        <button className="quick-action-btn">📈 Báo cáo</button>
-      </div>
+        {" "}
+        {actions.map((a, i) => (
+          <button
+            key={i}
+            className="quick-action-btn"
+            onClick={() => handleClick(a.path)}
+          >
+            {" "}
+            {a.icon} {a.label}{" "}
+          </button>
+        ))}{" "}
+      </div>{" "}
     </div>
   );
 }

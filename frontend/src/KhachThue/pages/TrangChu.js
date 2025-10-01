@@ -17,26 +17,21 @@ function TrangChu() {
   const [nhaTros, setNhaTros] = useState([]);
   const navigate = useNavigate();
 
-  // ✅ Lấy user và dữ liệu nhà trọ
   useEffect(() => {
-    if (!user) {
-      navigate("/"); // chưa đăng nhập thì về trang chủ
-      return;
+    // ✅ Nếu đã login thì điều hướng theo role
+    if (user) {
+      if (user.role === "chu_tro") {
+        navigate("/chu-tro");
+        return;
+      }
     }
 
-    if (user.role === "chu_tro") {
-      navigate("/chu-tro"); // nếu là chủ trọ thì sang trang chủ trọ
-      return;
-    }
-
-    if (user.role === "nguoi_thue") {
-      setUser(user); // lưu lại user
-    }
+    // ✅ Luôn fetch danh sách nhà trọ
     fetch("http://localhost:5000/api/nha-tro")
       .then((res) => res.json())
       .then((data) => setNhaTros(data))
       .catch((err) => console.error("Lỗi fetch:", err));
-  });
+  }, [user, navigate]);
 
   if (loading) return <p>Đang tải...</p>;
   if (error) return <p>Lỗi: {error}</p>;

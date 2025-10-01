@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ThemDV from "./ThemDV";
 import BangDV from "./BangDV";
-import "../../Css/DichVu.css";
+import "../../Css/DichVu/DichVu.css";
+import "../../Css/TrangChu.css";
 import { useUser } from "../../../context/UserContext";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import Breadcrumb from "../../components/Breadcrumb";
 
 function DichVu() {
   const { user, loading, error, setUser } = useUser();
@@ -36,26 +40,38 @@ function DichVu() {
         </Link>
       </p>
     );
-
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    setUser(null); // 👉 bây giờ hợp lệ vì đã destructure từ hook
+    navigate("/");
+  };
   return (
-    <div className="dichvu-container">
-      <h2>Danh sách dịch vụ</h2>
-
-      {/* Form thêm dịch vụ */}
-      <ThemDV
-        newService={newService}
-        setNewService={setNewService}
-        dichVuList={dichVuList}
-        setDichVuList={setDichVuList}
-      />
-
-      {/* Bảng dịch vụ */}
-      <BangDV
-        dichVuList={dichVuList}
-        setDichVuList={setDichVuList}
-        editingId={editingId}
-        setEditingId={setEditingId}
-      />
+    <div className="dashboard-container">
+      <Header user={user} onLogout={handleLogout} />
+      <div className="main-content">
+        <div className="dichvu-container">
+          <Breadcrumb
+            paths={[{ label: "Trang chủ", to: "/" }, { label: "Dịch vụ" }]}
+          />
+          {/* Form thêm dịch vụ */}
+          <ThemDV
+            newService={newService}
+            setNewService={setNewService}
+            dichVuList={dichVuList}
+            setDichVuList={setDichVuList}
+          />
+          <h2>Danh sách dịch vụ</h2>
+          {/* Bảng dịch vụ */}
+          <BangDV
+            dichVuList={dichVuList}
+            setDichVuList={setDichVuList}
+            editingId={editingId}
+            setEditingId={setEditingId}
+          />
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 }

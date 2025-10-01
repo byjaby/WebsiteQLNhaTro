@@ -1,48 +1,21 @@
-.dichvu-container {
-  padding: 20px;
-}
-
-.dichvu-container h2 {
-  margin-bottom: 20px;
-  font-size: 22px;
-  color: #222;
-}
-
-.add-service-form {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.add-service-form input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-.add-service-form button {
-  background: #28a745;
-  border: none;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
 .dichvu-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate; /* 👈 đổi sang separate */
+  border-spacing: 0;         /* xoá khoảng cách thừa */
   background: #fff;
-  border-radius: 8px;
+  border: 1px solid #ddd;    /* viền đen */
+  border-radius: 15px;
   overflow: hidden;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  margin-bottom: 10px;
 }
 
 .dichvu-table th,
-.dichvu-table td {
-  border: 1px solid #ddd;
+.dichvu-table td{
+border: 1px solid #ddd;
   padding: 10px 14px;
-  text-align: left;
+  text-align: center;
+  text-justify: center;
 }
 
 .dichvu-table th {
