@@ -1,4 +1,4 @@
-/* Loading Container */
+/* ---- GIỮ NGUYÊN HOẶC TÙY CHỈNH NẾU CẦN ---- */
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -28,34 +28,31 @@
   font-weight: 500;
 }
 
+/* ---- PHẦN CODE MỚI VÀ CẬP NHẬT ---- */
+
 /* Main Container */
 .chi-tiet-phong-container {
-  width: 70%;
-  margin: 10px auto;
-  padding: 0 20px;
-  animation: fadeIn 0.5s ease-in;
+  width: 90%;
+  max-width: 900px; /* Tăng max-width để có không gian cho gallery */
+  margin: 20px auto 40px auto;
+  padding: 0 15px;
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Title */
 .chi-tiet-phong-title {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 700;
   color: #2c3e50;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   text-align: center;
   position: relative;
-  padding-bottom: 15px;
+  padding-bottom: 12px;
 }
 
 .chi-tiet-phong-title::after {
@@ -64,358 +61,20 @@
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 80px;
+  width: 70px;
   height: 4px;
   background: linear-gradient(90deg, #4a90e2, #357abd);
   border-radius: 2px;
 }
 
-/* Room Info Card */
+/* Room Info Card - Thay đổi lớn */
 .phong-info {
   background: #ffffff;
   border-radius: 16px;
-  padding: 40px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  display: grid;
-  grid-template-columns: 180px 1fr;
-  gap: 25px;
-  align-items: center;
+  padding: 30px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
   transition: all 0.3s ease;
-}
-
-.phong-info:hover {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  transform: translateY(-2px);
-}
-
-.phong-info label {
-  font-size: 15px;
-  font-weight: 600;
-  color: #555;
-  letter-spacing: 0.3px;
-  display: flex;
-  align-items: center;
-}
-
-.phong-info label::before {
-  content: '▸';
-  color: #4a90e2;
-  margin-right: 8px;
-  font-size: 18px;
-}
-
-.phong-info span {
-  font-size: 16px;
-  color: #2c3e50;
-  padding: 12px 18px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  border-left: 3px solid #4a90e2;
-  transition: all 0.3s ease;
-}
-
-.phong-info span:hover {
-  background: #e8f4ff;
-  border-left-color: #357abd;
-}
-
-/* Edit Input Fields */
-.edit-input {
-  width: 100%;
-  padding: 12px 18px;
-  font-size: 15px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  outline: none;
-  background: #ffffff;
-  color: #2c3e50;
-  font-family: inherit;
-}
-
-.edit-input:focus {
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
-  background: #ffffff;
-}
-
-.edit-input:hover:not(:focus) {
-  border-color: #b0b0b0;
-}
-
-/* Input Wrapper for Notes */
-.input-wrapper {
-  display: flex;
+  display: flex; /* Chuyển sang flexbox column */
   flex-direction: column;
-  gap: 8px;
-}
-
-.input-wrapper .note {
-  font-size: 13px;
-  color: #e74c3c;
-  font-style: italic;
-  padding: 0;
-  background: none;
-  border: none;
-}
-
-/* Select Dropdown */
-select.edit-input {
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234a90e2' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 15px center;
-  padding-right: 40px;
-}
-
-select.edit-input:hover {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23357abd' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-}
-
-/* Action Buttons Container */
-.action-buttons {
-  grid-column: 1 / -1;
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  margin-top: 15px;
-  padding-top: 25px;
-  border-top: 2px solid #f0f0f0;
-}
-
-/* Button Base Styles */
-.action-btn {
-  padding: 12px 30px;
-  font-size: 15px;
-  font-weight: 600;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  letter-spacing: 0.3px;
-}
-
-.action-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.action-btn:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.action-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Edit Button */
-.action-btn.edit {
-  background: linear-gradient(135deg, #4a90e2, #357abd);
-  color: white;
-}
-
-.action-btn.edit:hover:not(:disabled) {
-  background: linear-gradient(135deg, #357abd, #2868a8);
-}
-
-/* Save Button */
-.action-btn.save {
-  background: linear-gradient(135deg, #27ae60, #229954);
-  color: white;
-}
-
-.action-btn.save:hover:not(:disabled) {
-  background: linear-gradient(135deg, #229954, #1e8449);
-}
-
-/* Delete Button */
-.action-btn.delete {
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
-  color: white;
-}
-
-.action-btn.delete:hover:not(:disabled) {
-  background: linear-gradient(135deg, #c0392b, #a93226);
-}
-
-/* Cancel Button */
-.action-btn.cancel {
-  background: linear-gradient(135deg, #95a5a6, #7f8c8d);
-  color: white;
-}
-
-.action-btn.cancel:hover:not(:disabled) {
-  background: linear-gradient(135deg, #7f8c8d, #707b7c);
-}
-
-/* Modal Overlay */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  animation: fadeInOverlay 0.3s ease;
-  backdrop-filter: blur(4px);
-}
-
-@keyframes fadeInOverlay {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Modal Box */
-.modal {
-  background: white;
-  border-radius: 20px;
-  padding: 40px;
-  max-width: 500px;
-  width: 90%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.3s ease;
-  position: relative;
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.modal h3 {
-  font-size: 24px;
-  color: #e74c3c;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.modal p {
-  font-size: 16px;
-  color: #555;
-  line-height: 1.6;
-  margin-bottom: 30px;
-}
-
-.modal p b {
-  color: #2c3e50;
-  font-weight: 600;
-}
-
-/* Modal Actions */
-.modal-actions {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-}
-
-.modal-actions .action-btn {
-  flex: 1;
-  justify-content: center;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .chi-tiet-phong-container {
-    margin: 20px auto;
-    padding: 0 15px;
-  }
-
-  .chi-tiet-phong-title {
-    font-size: 26px;
-  }
-
-  .phong-info {
-    grid-template-columns: 1fr;
-    padding: 25px;
-    gap: 20px;
-  }
-
-  .phong-info label {
-    padding-bottom: 5px;
-    border-bottom: 1px solid #e0e0e0;
-  }
-
-  .action-buttons {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .action-btn {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .modal {
-    padding: 30px 20px;
-  }
-
-  .modal-actions {
-    flex-direction: column;
-  }
-
-  .modal-actions .action-btn {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .chi-tiet-phong-title {
-    font-size: 22px;
-  }
-
-  .phong-info {
-    padding: 20px;
-  }
-
-  .action-btn {
-    padding: 10px 20px;
-    font-size: 14px;
-  }
-}
-
-/* Animation for input validation */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
-}
-
-.edit-input.error {
-  border-color: #e74c3c;
-  animation: shake 0.5s ease;
-}
-
-/* Success message animation */
-@keyframes successPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-.action-btn.save:active:not(:disabled) {
-  animation: successPulse 0.3s ease;
+  gap: 25px; /* Khoảng cách giữa gallery, details và buttons */
 }

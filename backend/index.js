@@ -9,6 +9,7 @@ require("dotenv").config();
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 // Middleware session
 app.use(
   session({
@@ -23,9 +24,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Cho phép truy cập thư mục uploads từ browser
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 const fs = require("fs");
-const uploadPath = path.join(process.cwd(), "uploads");
+const uploadPath = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
 }

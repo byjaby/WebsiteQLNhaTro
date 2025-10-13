@@ -1,0 +1,37 @@
+/* Action Buttons Container */
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 15px;
+  padding-top: 25px;
+  border-top: 1px solid #e9ecef;
+  width: 100%;
+}
+
+/* Button Styles (Giữ nguyên hoặc tùy chỉnh) */
+.action-btn {
+  padding: 12px 30px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+.action-btn.edit { background: linear-gradient(135deg, #4a90e2, #357abd); color: white; }
+.action-btn.delete { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; }
+.action-btn.cancel { background: linear-gradient(135deg, #95a5a6, #7f8c8d); color: white; }

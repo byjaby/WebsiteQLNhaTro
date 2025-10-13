@@ -9,32 +9,41 @@ import SearchFilter from "../components/SearchFilter";
 import RoomsGrid from "../components/RoomsGrid";
 import Footer from "../components/Footer";
 import { useUser } from "../../context/UserContext";
+import Pagination from "../components/Pagination";
 
 function TrangChu() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [rooms, setRooms] = useState([]);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const ROOMS_PER_PAGE = 9; // Số phòng tối đa mỗi trang
   // 👉 lấy user trực tiếp từ hook
   const { user, loading, error, setUser } = useUser();
+
+  const fetchRooms = () => {
+    if (user) {
+      axios
+        .get(`http://localhost:5000/api/phong/chu-tro/${user._id}`)
+        .then((res) => setRooms(res.data))
+        .catch((err) => console.error("Lỗi khi load phòng:", err));
+    }
+  };
   useEffect(() => {
     if (!user) {
-      navigate("/"); // chưa đăng nhập thì về trang chủ
+      navigate("/");
       return;
     }
-
     if (user.role === "nguoi_thue") {
-      navigate("/"); // nếu là chủ trọ thì sang trang chủ trọ
+      navigate("/");
       return;
     }
+    fetchRooms();
+  }, [user, navigate]);
 
-    axios
-      .get(`http://localhost:5000/api/phong/chu-tro/${user._id}`)
-      .then((res) => setRooms(res.data))
-      .catch((err) => console.error("Lỗi khi load phòng:", err));
-  }, [user, navigate, setUser]);
-
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, filterStatus]);
   if (loading) return <p>Đang tải...</p>;
   if (error) return <p>Lỗi: {error}</p>;
   if (!user)
@@ -68,6 +77,11 @@ function TrangChu() {
     return matchesSearch && matchesFilter;
   });
 
+  const totalPages = Math.ceil(filteredRooms.length / ROOMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ROOMS_PER_PAGE;
+  const endIndex = startIndex + ROOMS_PER_PAGE;
+  const paginatedRooms = filteredRooms.slice(startIndex, endIndex);
+
   return (
     <div className="dashboard-container">
       <Header user={user} onLogout={handleLogout} />
@@ -87,7 +101,13 @@ function TrangChu() {
             navigate("/them-phong", { state: { chuTroId: user._id } })
           }
         />
-        <RoomsGrid rooms={filteredRooms} />
+        <RoomsGrid rooms={paginatedRooms} fetchRooms={fetchRooms} />
+
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       </div>
       <Footer />
     </div>

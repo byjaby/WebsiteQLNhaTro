@@ -55,7 +55,7 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "/login",
+    failureRedirect: "http://localhost:3000/dang-nhap",
     session: false,
   }),
   (req, res) => {

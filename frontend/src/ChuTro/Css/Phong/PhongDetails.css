@@ -1,0 +1,53 @@
+/* --- ROOM DETAILS GRID (MỚI) --- */
+.phong-details-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 20px 30px;
+  align-items: center;
+  width: 100%;
+}
+
+.phong-details-grid label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #555;
+  display: flex;
+  align-items: center;
+}
+
+.phong-details-grid label::before {
+  content: '▸';
+  color: #4a90e2;
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.phong-details-grid span {
+  font-size: 16px;
+  color: black;
+  padding: 10px 15px;
+  background: #b5c9dd;
+  border-radius: 8px;
+}
+
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 13px;
+  text-align: center;
+  display: inline-block;
+  color: #fff;
+}
+
+.status-badge.status-trong {
+  background-color: #27ae60; /* Green */
+}
+
+.status-badge.status-da-thue {
+  background-color: #e74c3c; /* Red */
+}
+
+.status-badge.status-bao-tri {
+  background-color: #f39c12; /* Orange */
+}

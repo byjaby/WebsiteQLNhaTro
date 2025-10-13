@@ -3,24 +3,28 @@ import { useParams, useNavigate, useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../../Css/Phong/ChiTietPhong.css";
 import { useUser } from "../../../context/UserContext";
-import "../../Css/TrangChu.css";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import Breadcrumb from "../../components/Breadcrumb";
 import SuaPhong from "./SuaPhong";
+import ImageGallery from "./ImageGallery";
+import PhongDetails from "./PhongDetails";
+import PhongActions from "./PhongActions";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import "../../Css/Phong/ChiTietPhong.css";
 
 function ChiTietPhong() {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, error, setUser } = useUser();
+
   const [phong, setPhong] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [loading, setLoading] = useState(false); // loading chung cho save / delete
-  const [fetching, setFetching] = useState(true); // loading khi fetch ban đầu
-  const { user, error, setUser } = useUser();
+  const [loading, setLoading] = useState(false); // Dùng cho hành động xóa
+  const [fetching, setFetching] = useState(true); // Dùng cho tải trang ban đầu
 
   useEffect(() => {
     const fetchPhong = async () => {
@@ -30,6 +34,7 @@ function ChiTietPhong() {
         setPhong(res.data);
         if (location.state?.edit) {
           setIsEditing(true);
+          navigate(location.pathname, { replace: true, state: null });
         }
       } catch (err) {
         toast.error("❌ Lỗi khi tải dữ liệu phòng!");
@@ -38,19 +43,7 @@ function ChiTietPhong() {
       }
     };
     fetchPhong();
-  }, [id, location.state]);
-
-  if (loading) return <p>Đang tải...</p>;
-  if (error) return <p>Lỗi: {error}</p>;
-  if (!user)
-    return (
-      <p>
-        Chưa đăng nhập{" "}
-        <Link to="/dang-nhap">
-          <button className="login-btn">Đăng nhập</button>
-        </Link>
-      </p>
-    );
+  }, [id, location, navigate]);
 
   const handleLogout = () => {
     localStorage.clear();
@@ -63,15 +56,18 @@ function ChiTietPhong() {
     try {
       setLoading(true);
       await axios.delete(`http://localhost:5000/api/phong/${id}`);
-      toast.success("🗑️ Xóa phòng thành công!");
-      setTimeout(() => navigate("/chu-tro"), 2000);
+      toast.success("🗑️ Xóa phòng thành công!", {
+        onClose: () => navigate("/chu-tro"),
+        autoClose: 2000,
+      });
     } catch (err) {
       toast.error("❌ Lỗi khi xóa phòng!");
-    } finally {
       setLoading(false);
+      setShowDeleteModal(false);
     }
   };
 
+  // ----- Render Logic -----
   if (fetching) {
     return (
       <div className="loading-container">
@@ -81,6 +77,16 @@ function ChiTietPhong() {
     );
   }
 
+  if (error) return <p>Lỗi: {error}</p>;
+  if (!user)
+    return (
+      <p>
+        Chưa đăng nhập{" "}
+        <Link to="/dang-nhap">
+          <button className="login-btn">Đăng nhập</button>
+        </Link>
+      </p>
+    );
   if (!phong) return <p>Không tìm thấy dữ liệu phòng!</p>;
 
   return (
@@ -98,7 +104,7 @@ function ChiTietPhong() {
 
         <div className="chi-tiet-phong-container">
           <h2 className="chi-tiet-phong-title">
-            Chi tiết phòng {phong.tenPhong}
+            Chi tiết phòng: {phong.tenPhong}
           </h2>
 
           {isEditing ? (
@@ -109,73 +115,33 @@ function ChiTietPhong() {
             />
           ) : (
             <div className="phong-info">
-              <label>Tên phòng:</label>
-              <span>{phong.tenPhong}</span>
-
-              <label>Chiều dài:</label>
-              <span>{phong.chieuDai} m</span>
-
-              <label>Chiều rộng:</label>
-              <span>{phong.chieuRong} m</span>
-
-              <label>Số người tối đa:</label>
-              <span>{phong.soNguoiToiDa}</span>
-
-              <label>Tiền phòng (VNĐ):</label>
-              <span>{phong.tienPhong} VND</span>
-
-              <label>Trạng thái:</label>
-              <span>{phong.trangThai}</span>
-
-              <div className="action-buttons">
-                <button
-                  className="action-btn edit"
-                  onClick={() => setIsEditing(true)}
-                  disabled={loading}
-                >
-                  ✏️ Chỉnh sửa
-                </button>
-                <button
-                  className="action-btn delete"
-                  onClick={() => setShowDeleteModal(true)}
-                  disabled={loading}
-                >
-                  🗑️ Xóa phòng
-                </button>
-              </div>
+              <ImageGallery
+                images={phong.images}
+                coverImage={phong.coverImage}
+              />
+              <PhongDetails phong={phong} />
+              <PhongActions
+                onEditClick={() => setIsEditing(true)}
+                onDeleteClick={() => setShowDeleteModal(true)}
+                isLoading={loading}
+              />
             </div>
           )}
-
-          {/* Modal xác nhận xóa */}
-          {showDeleteModal && (
-            <div className="modal-overlay">
-              <div className="modal">
-                <h3>⚠️ Xác nhận xóa</h3>
-                <p>
-                  Bạn có chắc chắn muốn xóa phòng <b>{phong.tenPhong}</b> không?
-                </p>
-                <div className="modal-actions">
-                  <button
-                    className="action-btn delete"
-                    onClick={handleDelete}
-                    disabled={loading}
-                  >
-                    {loading ? "⏳ Đang xóa..." : "🗑️ Xóa"}
-                  </button>
-                  <button
-                    className="action-btn cancel"
-                    onClick={() => setShowDeleteModal(false)}
-                    disabled={loading}
-                  >
-                    ❌ Hủy
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <ToastContainer position="top-right" autoClose={2500} />
         </div>
+
+        <DeleteConfirmationModal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          onConfirm={handleDelete}
+          isLoading={loading}
+          tenPhong={phong.tenPhong}
+        />
+
+        <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+        />
       </div>
       <Footer />
     </div>

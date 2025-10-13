@@ -1,0 +1,46 @@
+.action-buttons {
+grid-column: 1 / -1;
+display: flex;
+gap: 15px;
+justify-content: center;
+margin-top: 15px;
+padding-top: 25px;
+border-top: 1px solid #f0f0f0;
+width: 100%;
+}
+.action-btn {
+padding: 12px 30px;
+font-size: 15px;
+font-weight: 600;
+border: none;
+border-radius: 10px;
+cursor: pointer;
+transition: all 0.3s ease;
+display: inline-flex;
+align-items: center;
+gap: 8px;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.action-btn:hover:not(:disabled) {
+transform: translateY(-2px);
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.action-btn.save {
+background: linear-gradient(135deg, #27ae60, #229954);
+color: white;
+}
+.action-btn.cancel {
+background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+color: white;
+}
+.action-btn:disabled {
+opacity: 0.6;
+cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+.phong-details-grid {
+grid-template-columns: 1fr;
+}
+}

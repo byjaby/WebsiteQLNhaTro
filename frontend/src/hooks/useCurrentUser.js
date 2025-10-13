@@ -27,7 +27,7 @@ function useCurrentUser() {
       }
     };
     fetchUser();
-  });
+  }, []);
   return { user, loading, error, setUser };
 }
 export default useCurrentUser;

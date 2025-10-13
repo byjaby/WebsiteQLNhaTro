@@ -13,6 +13,9 @@ const phongSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  images: [String], // Mảng các URL hình ảnh
+  coverImage: { type: String, default: "" }, // URL hình ảnh bìa
+  ngayTao: { type: Date, default: Date.now }, // ✅ Thêm dòng này
 });
 
 module.exports = mongoose.model("Phong", phongSchema);

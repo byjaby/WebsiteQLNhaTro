@@ -1,0 +1,48 @@
+/* Modal Styles (Giữ nguyên) */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeInOverlay 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+@keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+.modal h3 { font-size: 24px; color: #e74c3c; margin-bottom: 20px; }
+.modal p { font-size: 16px; color: #555; line-height: 1.6; margin-bottom: 30px; }
+.modal-actions { display: flex; gap: 15px; justify-content: center; }
+.modal-actions .action-btn { flex: 1; justify-content: center; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .phong-details-grid {
+    grid-template-columns: 140px 1fr;
+    gap: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .phong-details-grid {
+    grid-template-columns: 1fr; /* Stack layout on very small screens */
+  }
+  .phong-details-grid label {
+    padding-bottom: 5px;
+    border-bottom: 1px solid #eee;
+  }
+  .action-buttons {
+    flex-direction: column;
+  }
+}
